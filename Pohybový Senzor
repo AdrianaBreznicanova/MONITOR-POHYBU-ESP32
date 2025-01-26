@@ -1,0 +1,48 @@
+
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+Adafruit_SSD1306 display(128, 64, &Wire, -1);
+int pocet = 0;
+boolean zmena = false;
+
+void setup() {
+
+  Serial.begin(115200);
+
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  delay(2000);
+  display.clearDisplay();
+
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 10);
+  display.display(); 
+
+  pinMode(16, INPUT_PULLUP);
+
+}
+
+void loop() {
+
+
+  if (digitalRead(16) == HIGH) {
+    zmena = true;
+    
+
+  }
+
+  if (zmena && digitalRead(16) == LOW) {
+    pocet++;
+    zmena = false;
+  }
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.print("pocet rozsvieteni: ");
+  display.print(String(pocet));
+  display.display();
+
+  Serial.println(digitalRead(16));
+
+}
